@@ -76,7 +76,7 @@ const Item = styled.div`
 const Options = styled.div<{ expand: boolean }>`
   position: absolute;
   z-index: 1;
-  top: calc(100% - 1px);
+  top: calc(100% - 2px);
   left: -2px;
   display: ${({ expand }) => expand ? 'block' : 'none'};
   width: calc(100% + 4px);
@@ -101,6 +101,6 @@ const Wrapper = styled.div.attrs({
   align-items: center;
   width: 100%;
   height: 3rem;
-  border: ${({ active }) => active ? '2px solid #6200EE' : '1px solid black'};
+  outline: ${({ active }) => active ? '2px solid #6200EE' : '1px solid black'};
   border-radius: 4px;
 `
