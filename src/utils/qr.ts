@@ -12,7 +12,7 @@ export type ErrorCorrectionLevel = Extract<QRCodeErrorCorrectionLevel, 'L' | 'M'
 
 export interface QRCodeOptions {
   link: string;
-  scale: RequiredQRCodeRenderersOptions['scale'],
+  width: RequiredQRCodeRenderersOptions['width'],
   contentColor: RequiredQRCodeRenderersColorOptions['dark'],
   backgroundColor: RequiredQRCodeRenderersColorOptions['light'],
   errorCorrectionLevel: ErrorCorrectionLevel,
@@ -23,10 +23,10 @@ export interface QRCodeImageOptions extends QRCodeOptions {
 };
 
 function draw(canvas: HTMLCanvasElement, {
-  link, scale, contentColor, backgroundColor, errorCorrectionLevel
+  link, width, contentColor, backgroundColor, errorCorrectionLevel
 }: QRCodeOptions) {
   return QRCode.toCanvas(canvas, link, {
-    scale,
+    width,
     color: {
       dark: contentColor,
       light: backgroundColor,
@@ -37,10 +37,10 @@ function draw(canvas: HTMLCanvasElement, {
 };
 
 async function image({
-  link, scale, contentColor, backgroundColor, errorCorrectionLevel, extension,
+  link, width, contentColor, backgroundColor, errorCorrectionLevel, extension,
 }: QRCodeImageOptions) {
   const dataUrl = await QRCode.toDataURL(link, {
-    scale,
+    width,
     color: {
       dark: contentColor,
       light: backgroundColor,
@@ -56,10 +56,10 @@ async function image({
 };
 
 async function svg({
-  link, scale, contentColor, backgroundColor, errorCorrectionLevel,
-}: { link: string, scale: number, contentColor: string, backgroundColor: string, errorCorrectionLevel: QRCodeErrorCorrectionLevel }) {
+  link, width, contentColor, backgroundColor, errorCorrectionLevel,
+}: QRCodeImageOptions) {
   const result = await QRCode.toString(link, {
-    scale: +scale,
+    width,
     color: {
       dark: contentColor,
       light: backgroundColor,
