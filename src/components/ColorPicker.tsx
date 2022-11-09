@@ -68,6 +68,7 @@ export default ColorPicker;
 const Wrapper = styled(Input) <{ active: boolean }>`
   display: flex;
   align-items: center;
+  padding-right: 0.7rem;
 
   ${({ active }) => active && 'outline: 2px solid #6200EE;'}
 
@@ -77,8 +78,8 @@ const Wrapper = styled(Input) <{ active: boolean }>`
   }
 
   & > input:last-child {
-    width: 3rem;
-    height: 2.9rem;
+    width: 2rem;
+    height: 2rem;
     background: transparent;
   }
 `;
