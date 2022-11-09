@@ -39,7 +39,7 @@ const Dropdown = ({ className, placeholder = 'Select', selected, options, onSele
     <Wrapper className={className} active={isOpen} onClick={toggleOpen}>
       <Item>{currentLabel}</Item>
       <ArrowArea up={isOpen}><ArrowUp /></ArrowArea>
-      <Options expand={isOpen}>
+      <Options expand={isOpen} selectedValue={selected}>
         {options.map(({ label, value }) => (
           <Item data-value={value} key={value} onClick={handleSelect}>{label}</Item>
         ))}
@@ -73,7 +73,7 @@ const Item = styled.div`
   padding: 0 1rem;
 `
 
-const Options = styled.div<{ expand: boolean }>`
+const Options = styled.div<{ expand: boolean, selectedValue?: string, }>`
   position: absolute;
   z-index: 1;
   top: calc(100% - 2px);
@@ -87,8 +87,20 @@ const Options = styled.div<{ expand: boolean }>`
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
 
-  & > ${Item}:nth-child(n + 1) {
-    border-top: 1px solid #D5BFF9;
+  & > ${Item} {
+    transition: background-color 0.2s linear;
+
+    &[data-value='${({ selectedValue }) => selectedValue}'] {
+      background-color: #EFE5FD;
+    }
+
+    &:hover {
+      background-color: #D5BFF9;
+    }
+
+    &:nth-child(n + 1) {
+      border-top: 1px solid #D5BFF9;
+    }
   }
 `
 
