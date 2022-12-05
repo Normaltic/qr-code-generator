@@ -57,7 +57,7 @@ async function image({
 
 async function svg({
   link, width, contentColor, backgroundColor, errorCorrectionLevel,
-}: QRCodeImageOptions) {
+}: QRCodeOptions) {
   const result = await QRCode.toString(link, {
     width,
     color: {
