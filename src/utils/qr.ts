@@ -22,6 +22,10 @@ export interface QRCodeImageOptions extends QRCodeOptions {
   extension: ImageExtension,
 };
 
+export interface QRCodeStringOptions extends QRCodeOptions {
+  extension: ImageExtension | 'svg',
+}
+
 function draw(canvas: HTMLCanvasElement, {
   link, width, contentColor, backgroundColor, errorCorrectionLevel
 }: QRCodeOptions) {
@@ -36,10 +40,10 @@ function draw(canvas: HTMLCanvasElement, {
   });
 };
 
-async function image({
+function toString({
   link, width, contentColor, backgroundColor, errorCorrectionLevel, extension,
-}: QRCodeImageOptions) {
-  const dataUrl = await QRCode.toDataURL(link, {
+}: QRCodeStringOptions) {
+  const options: QRCodeRenderersOptions = {
     width,
     color: {
       dark: contentColor,
@@ -47,26 +51,26 @@ async function image({
     },
     errorCorrectionLevel,
     maskPattern: 1,
-    type: `image/${extension}`,
-  });
+  };
+
+  if (extension === 'svg') {
+    return QRCode.toString(link, { ...options });
+  }
+
+  return QRCode.toDataURL(link, { ...options, type: `image/${extension}` });
+};
+
+async function toImage({ extension, ...options }: QRCodeImageOptions) {
+  const dataUrl = await toString({ ...options, extension })
 
   const blob = new Blob([dataUrl], { type: `image/${extension}` });
 
   return blob;
 };
 
-async function svg({
-  link, width, contentColor, backgroundColor, errorCorrectionLevel,
-}: QRCodeOptions) {
-  const result = await QRCode.toString(link, {
-    width,
-    color: {
-      dark: contentColor,
-      light: backgroundColor,
-    },
-    errorCorrectionLevel: errorCorrectionLevel,
-    maskPattern: 1,
-  })
+async function toSvg(options: QRCodeOptions) {
+  const result = await toString({ ...options, extension: 'svg' });
+
   const svgBlob = new Blob([result], { type: "image/svg+xml;charset=utf-8" });
 
   return svgBlob;
@@ -74,8 +78,9 @@ async function svg({
 
 const QR = {
   draw,
-  image,
-  svg,
+  toString,
+  toImage,
+  toSvg,
 };
 
 export default QR;
