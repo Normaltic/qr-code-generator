@@ -6,12 +6,12 @@ import useInput from "../hooks/useInput";
 import validator from "../utils/validator";
 
 import Button from "./Button";
-import Dropdown, { DropdownOption } from "./Dropdown";
+import Dropdown from "./Dropdown";
 import Heading3 from "./Heading3";
 import Input from "./Input";
 import ColorInput from "./ColorPicker";
 
-const DROPDOWN_OPTIONS: Array<DropdownOption> = [
+const DROPDOWN_OPTIONS = [
   { label: 'Low( ~7% )', value: 'L' },
   { label: 'Medium( ~15% )', value: 'M' },
   { label: 'Quartile( ~25% )', value: 'Q' },
@@ -81,44 +81,40 @@ const QROptionForm = ({ className, onSubmit }: QROptionFormProps) => {
           placeholder={`URL without 'https://'`}
         />
       </Item>
-      <RowBetween>
-        <Item>
-          <Heading3>Content color</Heading3>
-          <ColorInput
-            value={contentColor}
-            onChange={setContentColor}
-            valid={isValidContentColor}
-            placeholder='#000000'
-          />
-        </Item>
-        <Item>
-          <Heading3>Background color</Heading3>
-          <ColorInput
-            value={backgroundColor}
-            onChange={setBackgroundColor}
-            placeholder='#FFFFFF'
-          />
-        </Item>
-      </RowBetween>
-      <RowBetween>
-        <Item>
-          <Heading3>Error correction level</Heading3>
-          <Dropdown
-            selected={errorLevel}
-            options={DROPDOWN_OPTIONS}
-            onSelect={setErrorLevel}
-          />
-        </Item>
-        <Item>
-          <Heading3>Width</Heading3>
-          <Input
-            value={width}
-            onChange={setWidth}
-            valid={isValidWidth}
-            placeholder={`Value is larger than '37'`}
-          />
-        </Item>
-      </RowBetween>
+      <Item>
+        <Heading3>Content color</Heading3>
+        <ColorInput
+          value={contentColor}
+          onChange={setContentColor}
+          valid={isValidContentColor}
+          placeholder='#000000'
+        />
+      </Item>
+      <Item>
+        <Heading3>Background color</Heading3>
+        <ColorInput
+          value={backgroundColor}
+          onChange={setBackgroundColor}
+          placeholder='#FFFFFF'
+        />
+      </Item>
+      <Item>
+        <Heading3>Error correction level</Heading3>
+        <Dropdown
+          selected={errorLevel}
+          options={DROPDOWN_OPTIONS}
+          onSelect={setErrorLevel}
+        />
+      </Item>
+      <Item>
+        <Heading3>Width</Heading3>
+        <Input
+          value={width}
+          onChange={setWidth}
+          valid={isValidWidth}
+          placeholder={`Value is larger than '37'`}
+        />
+      </Item>
       <Button
         type='submit'
         disabled={!isValidUrl || !isValidContentColor || !isValidWidth}
@@ -135,19 +131,12 @@ const Form = styled.form`
   }
 `;
 
-
-const RowBetween = styled.div`
-  display: flex;
-  justify-content: space-between;
-  gap: 2rem;
-`
-
 const Item = styled.div`
   flex: 1;
   & > ${Heading3} {
     margin-bottom: 0.5rem;
   }
-`
+`;
 
 export default QROptionForm;
 
