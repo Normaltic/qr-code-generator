@@ -76,11 +76,18 @@ async function toSvg(options: QRCodeOptions) {
   return svgBlob;
 }
 
+
+function isErrorCorrectionLevel(value: unknown): value is ErrorCorrectionLevel {
+  return typeof value === 'string' && ['L', 'M', 'Q', 'H'].includes(value);
+}
+
+
 const QR = {
   draw,
   toString,
   toImage,
   toSvg,
+  isErrorCorrectionLevel,
 };
 
 export default QR;

@@ -1,39 +1,40 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
+
+import QR from './utils/qr';
+
+import useQROptionsBySearch from './hooks/useQROptionsBySearch';
 
 import Section from './components/Section';
 import QROptionForm, { QROptionFormProps } from './components/QROptionForm';
-import QR, { QRCodeOptions } from './utils/qr';
 import Button from './components/Button';
 
 const QRCODE_PREVIEW_SIZE = 300;
 
 function App() {
-  const previewRef = useRef<HTMLDivElement>(null);
-  const [options, setOptions] = useState<QRCodeOptions>({
+  const [option, updateOption] = useQROptionsBySearch({
     backgroundColor: '#FFFFFF',
     contentColor: '#000000',
     errorCorrectionLevel: 'L',
     width: 100,
-    link: 'https://naver.com',
+    link: 'https://qr-code.yunji.kim',
   });
 
+  const previewRef = useRef<HTMLDivElement>(null);
+
   const handleSubmit: QROptionFormProps['onSubmit'] = (values) => {
-    setOptions({
-      backgroundColor: values.backgroundColor,
-      contentColor: values.contentColor,
-      errorCorrectionLevel: values.errorCorrectionLevel as QRCodeOptions['errorCorrectionLevel'],
-      width: +values.width,
-      link: `https://${values.url}`,
-    })
+    updateOption({
+      ...values,
+      link: values.url,
+    });
   }
 
   useEffect(() => {
     (async () => {
-      const str = await QR.toString({ ...options, width: QRCODE_PREVIEW_SIZE, contentColor: '#000000FF', extension: 'svg' });
+      const str = await QR.toString({ ...option, width: QRCODE_PREVIEW_SIZE, extension: 'svg' });
       if (previewRef.current) previewRef.current.innerHTML = str;
     })()
-  }, [options]);
+  }, [option]);
 
   return (
     <Wrapper>
