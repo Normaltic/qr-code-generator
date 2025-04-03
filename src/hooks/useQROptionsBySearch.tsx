@@ -41,7 +41,7 @@ function useQROptionsBySearch(defaultOprion: QRCodeOptions) {
       contentColor: ctColor && validator.isHEX(ctColor) ? ctColor : optRef.current.contentColor,
       errorCorrectionLevel: ecLevel && QR.isErrorCorrectionLevel(ecLevel) ? ecLevel : optRef.current.errorCorrectionLevel,
       width: width && Number.isSafeInteger(+width) ? +width : optRef.current.width,
-      link: link && validator.isURL(link) ? link : optRef.current.link,
+      link: link && validator.isURI(link) ? link : optRef.current.link,
     }
 
     return parsed;
@@ -61,7 +61,7 @@ function useQROptionsBySearch(defaultOprion: QRCodeOptions) {
       [KEYS.CONTENT_COLOR]: typeof contentColor === 'string' && validator.isHEX(contentColor) ? contentColor : optRef.current.contentColor,
       [KEYS.ERROR_CORRECTION_LEVEL]: QR.isErrorCorrectionLevel(errorCorrectionLevel) ? errorCorrectionLevel : optRef.current.errorCorrectionLevel,
       [KEYS.WIDTH]: Number.isSafeInteger(+width) ? +width : optRef.current.width,
-      [KEYS.LINK]: typeof link === 'string' && validator.isURL(link) ? link : optRef.current.link
+      [KEYS.LINK]: typeof link === 'string' && validator.isURI(link) ? link : optRef.current.link
     };
 
     const searchParams = new URLSearchParams({

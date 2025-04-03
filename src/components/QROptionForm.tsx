@@ -1,15 +1,18 @@
 import React, { FormEvent, useCallback, useMemo, useState } from "react";
 import styled from "styled-components";
 
-import useInput from "../hooks/useInput";
+import { ErrorCorrectionLevel } from "../utils/qr";
 
-import validator from "../utils/validator";
+import useQROptionsBySearch from '../hooks/useQROptionsBySearch';
+import useHexCode from "../hooks/useHexCode";
+import useNumber from "../hooks/useNumber";
+import useURI from "../hooks/useURI";
 
-import Button from "./Button";
-import Dropdown from "./Dropdown";
-import Heading3 from "./Heading3";
-import Input from "./Input";
-import ColorInput from "./ColorPicker";
+import Button from "../components/Button";
+import Dropdown from "../components/Dropdown";
+import Heading3 from "../components/Heading3";
+import Input from "../components/Input";
+import ColorInput from "../components/ColorPicker";
 
 const DROPDOWN_OPTIONS = [
   { label: 'Low( ~7% )', value: 'L' },
@@ -18,106 +21,77 @@ const DROPDOWN_OPTIONS = [
   { label: 'High( ~30% )', value: 'H' },
 ]
 
-export interface QROptionFormProps {
+export interface OptionFormProps {
   className?: string;
-  onSubmit: ({
-    url, contentColor, backgroundColor, errorCorrectionLevel, width,
-  }: {
-    url: string, contentColor: string, backgroundColor: string, errorCorrectionLevel: string, width: string,
-  }) => void;
 }
 
-const QROptionForm = ({ className, onSubmit }: QROptionFormProps) => {
-  const [url, setUrl, isValidUrl] = useInput('naver.com', {
-    validator: validator.isURL
+const OptionForm = ({ className }: OptionFormProps) => {
+  const [options, update] = useQROptionsBySearch({
+    backgroundColor: '#FFFFFF',
+    contentColor: '#000000',
+    errorCorrectionLevel: 'L',
+    width: 100,
+    link: 'https://qr-code.yunji.kim',
   });
 
-  const [contentColor, setContentColor, isValidContentColor] = useInput('#000000', {
-    preProcessor: value => {
-      const replaced = value.slice(0, 7).toUpperCase().replace(/[^0-9|^A-F|]/gi, '');
-      return `#${replaced}`;
-    },
-    validator: validator.isHEX,
-  });
+  const [uri, setUri, isValidUri] = useURI(options.link);
 
-  const [backgroundColor, setBackgroundColor, isValidBackgroundColor] = useInput('#FFFFFF', {
-    preProcessor: value => {
-      const replaced = value.slice(0, 7).toUpperCase().replace(/[^0-9|^A-F|]/gi, '');
-      return `#${replaced}`;
-    },
-    validator: value => value.length === 7,
-  });
+  const [contentColor, setContentColor, isValidContentColor] = useHexCode(options.contentColor);
 
-  const [errorLevel, setErrorLevel] = useState('L');
+  const [backgroundColor, setBackgroundColor, isValidBackgroundColor] = useHexCode(options.backgroundColor);
 
-  const [width, setWidth, isValidWidth] = useInput('37', {
-    preProcessor: value => {
-      const replaced = value.replace(/[^0-9]/gi, '');
-      return replaced;
-    },
-    validator: value => {
-      return Number.isNaN(+value) === false && +value >= 37;
-    },
-  })
+  const [errorLevel, setErrorLevel] = useState(options.errorCorrectionLevel);
+
+  const [width, setWidth, isValidWidth] = useNumber(options.width, { min: 37 });
 
   const isCanSubmit = useMemo(() => {
-    return isValidUrl && isValidContentColor && isValidBackgroundColor && isValidWidth;
-  }, [isValidUrl, isValidContentColor, isValidBackgroundColor, isValidWidth]);
+    return isValidUri && isValidContentColor && isValidBackgroundColor && isValidWidth;
+  }, [isValidUri, isValidContentColor, isValidBackgroundColor, isValidWidth]);
 
   const handleSubmit = useCallback((e: FormEvent) => {
     e.preventDefault();
     if (!isCanSubmit) return;
-    onSubmit({ url, contentColor, backgroundColor, errorCorrectionLevel: errorLevel, width });
-  }, [isCanSubmit, onSubmit, url, contentColor, backgroundColor, errorLevel, width]);
+    update({ link: uri, contentColor, backgroundColor, errorCorrectionLevel: errorLevel, width });
+  }, [isCanSubmit, uri, contentColor, backgroundColor, errorLevel, width, update]);
 
   return (
     <Form className={className} onSubmit={handleSubmit}>
-      <Item>
-        <Heading3>URL</Heading3>
-        <Input
-          value={url}
-          onChange={setUrl}
-          valid={isValidUrl}
-          placeholder={`URL without 'https://'`}
-        />
-      </Item>
-      <Item>
-        <Heading3>Content color</Heading3>
-        <ColorInput
-          value={contentColor}
-          onChange={setContentColor}
-          valid={isValidContentColor}
-          placeholder='#000000'
-        />
-      </Item>
-      <Item>
-        <Heading3>Background color</Heading3>
-        <ColorInput
-          value={backgroundColor}
-          onChange={setBackgroundColor}
-          placeholder='#FFFFFF'
-        />
-      </Item>
-      <Item>
-        <Heading3>Error correction level</Heading3>
-        <Dropdown
-          selected={errorLevel}
-          options={DROPDOWN_OPTIONS}
-          onSelect={setErrorLevel}
-        />
-      </Item>
-      <Item>
-        <Heading3>Width</Heading3>
-        <Input
-          value={width}
-          onChange={setWidth}
-          valid={isValidWidth}
-          placeholder={`Value is larger than '37'`}
-        />
-      </Item>
+      <Heading3>URL</Heading3>
+      <Input
+        value={uri}
+        onChange={setUri}
+        valid={isValidUri}
+        placeholder={`URI without 'https://'`}
+      />
+      <Heading3>Content color</Heading3>
+      <ColorInput
+        value={contentColor}
+        onChange={setContentColor}
+        valid={isValidContentColor}
+        placeholder='#000000'
+      />
+      <Heading3>Background color</Heading3>
+      <ColorInput
+        value={backgroundColor}
+        onChange={setBackgroundColor}
+        placeholder='#FFFFFF'
+      />
+      <Heading3>Error correction level</Heading3>
+      <Dropdown
+        selected={errorLevel}
+        options={DROPDOWN_OPTIONS}
+        onSelect={(args) => setErrorLevel(args as ErrorCorrectionLevel)}
+      />
+      <Heading3>Width</Heading3>
+      <Input
+        value={width}
+        onChange={setWidth}
+        valid={isValidWidth}
+        placeholder={`Value is larger than '37'`}
+      />
       <Button
         type='submit'
-        disabled={!isValidUrl || !isValidContentColor || !isValidWidth}
+        disabled={isCanSubmit === false}
       >
         Generate QR code
       </Button>
@@ -126,17 +100,18 @@ const QROptionForm = ({ className, onSubmit }: QROptionFormProps) => {
 }
 
 const Form = styled.form`
-  & > *:nth-child(n + 2) {
+  & > ${Heading3} {
+    margin-bottom: 0.5rem;
+
+    &:nth-child(2n + 3) {
+      margin-top: 2rem;
+    }
+  }
+
+  & > ${Button} {
     margin-top: 2rem;
   }
 `;
 
-const Item = styled.div`
-  flex: 1;
-  & > ${Heading3} {
-    margin-bottom: 0.5rem;
-  }
-`;
-
-export default QROptionForm;
+export default OptionForm;
 

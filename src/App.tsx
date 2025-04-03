@@ -6,13 +6,13 @@ import QR from './utils/qr';
 import useQROptionsBySearch from './hooks/useQROptionsBySearch';
 
 import Section from './components/Section';
-import QROptionForm, { QROptionFormProps } from './components/QROptionForm';
+import OptionForm from './components/QROptionForm';
 import Button from './components/Button';
 
 const QRCODE_PREVIEW_SIZE = 300;
 
 function App() {
-  const [option, updateOption] = useQROptionsBySearch({
+  const [option] = useQROptionsBySearch({
     backgroundColor: '#FFFFFF',
     contentColor: '#000000',
     errorCorrectionLevel: 'L',
@@ -21,13 +21,6 @@ function App() {
   });
 
   const previewRef = useRef<HTMLDivElement>(null);
-
-  const handleSubmit: QROptionFormProps['onSubmit'] = (values) => {
-    updateOption({
-      ...values,
-      link: values.url,
-    });
-  }
 
   useEffect(() => {
     (async () => {
@@ -39,7 +32,7 @@ function App() {
   return (
     <Wrapper>
       <Section>
-        <QROptionForm onSubmit={handleSubmit} />
+        <OptionForm />
       </Section>
       <Section>
         <QRPreviewArea ref={previewRef} />

@@ -1,5 +1,6 @@
-function isURL(value: unknown) {
-  return typeof value === 'string' && /^[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&//=]*)$/.test(value);
+function isURI(value: unknown) {
+  if (typeof value !== 'string') return false;
+  return /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-z]{1,6}\b([-a-zA-Z0-9@:%_+.~#()?&//=]*)/.test(value);
 }
 
 function isHEX(value: unknown) {
@@ -7,7 +8,7 @@ function isHEX(value: unknown) {
 }
 
 const validator = {
-  isURL,
+  isURI,
   isHEX,
 }
 
