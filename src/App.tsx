@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 import QR from './utils/qr';
 
@@ -31,14 +31,14 @@ function App() {
 
   return (
     <Wrapper>
-      <Section>
+      <StyledSection>
         <OptionForm />
-      </Section>
-      <Section>
+      </StyledSection>
+      <StyledSection>
         <QRPreviewArea ref={previewRef} />
         <Button>Download PNG</Button>
         <Button>Download SVG</Button>
-      </Section>
+      </StyledSection>
     </Wrapper>
   );
 }
@@ -51,20 +51,20 @@ const Wrapper = styled.div`
   max-width: 1100px;
   margin: auto;
   padding: 2rem;
+`;
 
-  & > ${Section} {
-    &:first-child {
-      flex: 1;
-    }
-    &:last-child {
-      flex: 0;
+const StyledSection = styled(Section)`
+  &:first-child {
+    flex: 1;
+  }
+  &:last-child {
+    flex: 0;
 
-      & > button {
-        margin: 0.25rem 0;
-      }
+    & > button {
+      margin: 0.25rem 0;
     }
   }
-`;
+`
 
 const QRPreviewArea = styled.div`
   width: ${QRCODE_PREVIEW_SIZE}px;

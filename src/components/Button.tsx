@@ -1,24 +1,21 @@
-import styled from "styled-components";
+import styled from "@emotion/styled";
+import { inputStyle } from "./styles";
 
-const Button = styled.button.attrs(props => ({
-  type: props.type || 'button'
-}))`
-  width: 100%;
-  height: 3rem;
-  border-radius: 4px;
-  background-color: #6200EE;
-  color: #EFEFEF;
+const Button = styled.button`
+  ${inputStyle};
+  background-color: #6200ee;
+  color: #efefef;
   transition: all 0.2s linear;
 
   &:hover {
-    background-color: #3700B3;
+    background-color: #3700b3;
   }
 
   &:disabled {
     cursor: not-allowed;
     transition: none;
-    background-color: #D5BFF9;
+    background-color: #d5bff9;
   }
-`
+`;
 
 export default Button;

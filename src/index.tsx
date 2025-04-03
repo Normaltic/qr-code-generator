@@ -1,9 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
+import { Global } from '@emotion/react';
 
 import App from './App';
-import ResetStyle from './components/ResetStyle';
+import resetStyle from './components/ResetStyle';
 
 import reportWebVitals from './reportWebVitals';
 
@@ -14,7 +15,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <ResetStyle />
+      <Global styles={resetStyle} />
       <App />
     </BrowserRouter>
   </React.StrictMode>

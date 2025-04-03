@@ -1,11 +1,10 @@
-import styled, { css } from "styled-components";
+import styled from '@emotion/styled';
+import { css } from "@emotion/react";
+
+import { inputStyle } from './styles';
 
 const Input = styled.input<{ valid?: boolean }>`
-  width: 100%;
-  height: 3rem;
-  padding: 0 1rem;
-  border-radius: 4px;
-
+  ${inputStyle}
   outline: 1px solid black;
   ${({ valid }) => valid === false && css`
     outline: 2px solid #B00020;

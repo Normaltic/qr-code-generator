@@ -1,5 +1,7 @@
+/** @jsxImportSource @emotion/react */
+
 import React, { FormEvent, useCallback, useMemo, useState } from "react";
-import styled from "styled-components";
+import styled from "@emotion/styled";
 
 import { ErrorCorrectionLevel } from "../utils/qr";
 
@@ -55,34 +57,34 @@ const OptionForm = ({ className }: OptionFormProps) => {
   }, [isCanSubmit, uri, contentColor, backgroundColor, errorLevel, width, update]);
 
   return (
-    <Form className={className} onSubmit={handleSubmit}>
-      <Heading3>URL</Heading3>
+    <form className={className} onSubmit={handleSubmit}>
+      <StyledHeading3>URL</StyledHeading3>
       <Input
         value={uri}
         onChange={setUri}
         valid={isValidUri}
         placeholder={`URI without 'https://'`}
       />
-      <Heading3>Content color</Heading3>
+      <StyledHeading3>Content color</StyledHeading3>
       <ColorInput
         value={contentColor}
         onChange={setContentColor}
         valid={isValidContentColor}
         placeholder='#000000'
       />
-      <Heading3>Background color</Heading3>
+      <StyledHeading3>Background color</StyledHeading3>
       <ColorInput
         value={backgroundColor}
         onChange={setBackgroundColor}
         placeholder='#FFFFFF'
       />
-      <Heading3>Error correction level</Heading3>
+      <StyledHeading3>Error correction level</StyledHeading3>
       <Dropdown
         selected={errorLevel}
         options={DROPDOWN_OPTIONS}
         onSelect={(args) => setErrorLevel(args as ErrorCorrectionLevel)}
       />
-      <Heading3>Width</Heading3>
+      <StyledHeading3>Width</StyledHeading3>
       <Input
         value={width}
         onChange={setWidth}
@@ -92,26 +94,23 @@ const OptionForm = ({ className }: OptionFormProps) => {
       <Button
         type='submit'
         disabled={isCanSubmit === false}
+        css={{
+          marginTop: '2rem',
+        }}
       >
         Generate QR code
       </Button>
-    </Form>
+    </form>
   )
 }
 
-const Form = styled.form`
-  & > ${Heading3} {
-    margin-bottom: 0.5rem;
+const StyledHeading3 = styled(Heading3)`
+  margin-bottom: 0.5rem;
 
-    &:nth-child(2n + 3) {
-      margin-top: 2rem;
-    }
-  }
-
-  & > ${Button} {
+  &:nth-child(2n + 3) {
     margin-top: 2rem;
   }
-`;
+`
 
 export default OptionForm;
 
