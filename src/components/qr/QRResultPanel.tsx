@@ -10,7 +10,7 @@ export interface QRResultPanelProps {
   qr: QRCode;
 }
 
-const QRCODE_PREVIEW_SIZE = 300;
+const QRCODE_PREVIEW_SIZE = 250;
 
 function QRResultPanel({ className, qr }: QRResultPanelProps) {
   const previewRef = useRef<HTMLDivElement>(null);
@@ -52,7 +52,8 @@ function QRResultPanel({ className, qr }: QRResultPanelProps) {
 export default QRResultPanel;
 
 const Wrapper = styled.div`
-  ${Button} {
-    margin-top: 2rem;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
 `;

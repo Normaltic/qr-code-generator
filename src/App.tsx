@@ -32,17 +32,27 @@ export default App;
 
 const Wrapper = styled.div`
   display: flex;
-  gap: 2rem;
   max-width: 1100px;
   margin: auto;
   padding: 2rem;
 
   & > ${Section} {
+    background-color: white;
     &:first-child {
       flex: 1;
+      border-right-width: 0;
     }
     &:last-child {
       flex: 0;
+    }
+  }
+
+  @media (max-width: 768px) {
+    display: block;
+
+    & > ${Section}:first-child {
+      border-right-width: 1px;
+      border-bottom-width: 0;
     }
   }
 `;
