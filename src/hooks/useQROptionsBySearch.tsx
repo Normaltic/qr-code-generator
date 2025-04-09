@@ -1,8 +1,8 @@
 import { useCallback, useMemo, useRef } from "react";
 import { useLocation, useNavigate } from 'react-router';
 
-import QR, { QRCodeOptions } from "../utils/qr";
-import validator from "../utils/validator";
+import QR, { QRCodeOptions } from "@/utils/qr";
+import validator from "@/utils/validator";
 
 const KEYS = {
   BACKGROUND_COLOR: 'bgc',
@@ -27,7 +27,7 @@ function useQROptionsBySearch(defaultOprion: QRCodeOptions) {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const option = useMemo(() => {
+  const qr = useMemo(() => {
     const searchParams = new URLSearchParams(location.search);
 
     const bgColor = searchParams.get(KEYS.BACKGROUND_COLOR);
@@ -36,15 +36,15 @@ function useQROptionsBySearch(defaultOprion: QRCodeOptions) {
     const width = searchParams.get(KEYS.WIDTH);
     const link = searchParams.get(KEYS.LINK);
 
-    const parsed: QRCodeOptions = {
+    const instance = new QR({
       backgroundColor: bgColor && validator.isHEX(bgColor) ? bgColor : optRef.current.backgroundColor,
       contentColor: ctColor && validator.isHEX(ctColor) ? ctColor : optRef.current.contentColor,
       errorCorrectionLevel: ecLevel && QR.isErrorCorrectionLevel(ecLevel) ? ecLevel : optRef.current.errorCorrectionLevel,
       width: width && Number.isSafeInteger(+width) ? +width : optRef.current.width,
       link: link && validator.isURI(link) ? link : optRef.current.link,
-    }
+    })
 
-    return parsed;
+    return instance;
   }, [location.search]);
 
   const update = useCallback((args: Record<keyof QRCodeOptions, number | string>) => {
@@ -72,7 +72,7 @@ function useQROptionsBySearch(defaultOprion: QRCodeOptions) {
     navigate({ search: searchParams.toString() });
   }, [navigate]);
 
-  return [option, update] as const;
+  return [qr, update] as const;
 }
 
 export default useQROptionsBySearch;

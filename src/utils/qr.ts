@@ -1,4 +1,4 @@
-import QRCode, { QRCodeErrorCorrectionLevel, QRCodeDataURLType, QRCodeRenderersOptions } from 'qrcode';
+import qr, { QRCodeErrorCorrectionLevel, QRCodeDataURLType, QRCodeRenderersOptions } from 'qrcode';
 
 type RequiredQRCodeRenderersOptions = Required<QRCodeRenderersOptions>;
 
@@ -26,68 +26,96 @@ export interface QRCodeStringOptions extends QRCodeOptions {
   extension: ImageExtension | 'svg',
 }
 
-function draw(canvas: HTMLCanvasElement, {
-  link, width, contentColor, backgroundColor, errorCorrectionLevel
-}: QRCodeOptions) {
-  return QRCode.toCanvas(canvas, link, {
-    width,
-    color: {
-      dark: contentColor,
-      light: backgroundColor,
-    },
-    errorCorrectionLevel,
-    maskPattern: 1,
-  });
-};
+class QRCode implements QRCodeOptions {
 
-function toString({
-  link, width, contentColor, backgroundColor, errorCorrectionLevel, extension,
-}: QRCodeStringOptions) {
-  const options: QRCodeRenderersOptions = {
-    width,
-    color: {
-      dark: contentColor,
-      light: backgroundColor,
-    },
-    errorCorrectionLevel,
-    maskPattern: 1,
-  };
+  link: string;
 
-  if (extension === 'svg') {
-    return QRCode.toString(link, { ...options });
+  width: RequiredQRCodeRenderersOptions['width'];
+
+  contentColor: RequiredQRCodeRenderersColorOptions['dark'];
+
+  backgroundColor: RequiredQRCodeRenderersColorOptions['light'];
+
+  errorCorrectionLevel: ErrorCorrectionLevel;
+
+  constructor(options: QRCodeOptions) {
+    this.link = options.link;
+    this.width = options.width;
+    this.contentColor = options.contentColor;
+    this.backgroundColor = options.backgroundColor;
+    this.errorCorrectionLevel = options.errorCorrectionLevel;
   }
 
-  return QRCode.toDataURL(link, { ...options, type: `image/${extension}` });
-};
+  static draw(canvas: HTMLCanvasElement, {
+    link, width, contentColor, backgroundColor, errorCorrectionLevel
+  }: QRCodeOptions) {
+    return qr.toCanvas(canvas, link, {
+      width,
+      color: {
+        dark: contentColor,
+        light: backgroundColor,
+      },
+      errorCorrectionLevel,
+      maskPattern: 1,
+    });
+  };
 
-async function toImage({ extension, ...options }: QRCodeImageOptions) {
-  const dataUrl = await toString({ ...options, extension })
+  static toString({
+    link, width, contentColor, backgroundColor, errorCorrectionLevel, extension,
+  }: QRCodeStringOptions) {
+    const options: QRCodeRenderersOptions = {
+      width,
+      color: {
+        dark: contentColor,
+        light: backgroundColor,
+      },
+      errorCorrectionLevel,
+      maskPattern: 1,
+    };
+  
+    if (extension === 'svg') {
+      return qr.toString(link, { ...options });
+    }
+  
+    return qr.toDataURL(link, { ...options, type: `image/${extension}` });
+  };
 
-  const blob = new Blob([dataUrl], { type: `image/${extension}` });
+  static async toImage({ extension, ...options }: QRCodeImageOptions) {
+    const dataUrl = await QRCode.toString({ ...options, extension })
+  
+    const blob = new Blob([dataUrl], { type: `image/${extension}` });
+  
+    return blob;
+  };
 
-  return blob;
-};
+  static async toSVG(options: QRCodeOptions) {
+    const result = await QRCode.toString({ ...options, extension: 'svg' });
+  
+    const svgBlob = new Blob([result], { type: "image/svg+xml;charset=utf-8" });
+  
+    return svgBlob;
+  }
 
-async function toSvg(options: QRCodeOptions) {
-  const result = await toString({ ...options, extension: 'svg' });
+  static isErrorCorrectionLevel(value: unknown): value is ErrorCorrectionLevel {
+    return typeof value === 'string' && ['L', 'M', 'Q', 'H'].includes(value);
+  }
 
-  const svgBlob = new Blob([result], { type: "image/svg+xml;charset=utf-8" });
 
-  return svgBlob;
+  draw(canvas: HTMLCanvasElement) {
+    return QRCode.draw(canvas, this);
+  }
+
+  toString(extension: QRCodeStringOptions['extension']) {
+    return QRCode.toString({ extension, ...this });
+  }
+
+  toImage(extension: QRCodeImageOptions['extension']) {
+    return QRCode.toImage({ extension, ...this });
+  }
+
+  toSVG() {
+    return QRCode.toSVG(this);
+  }
 }
 
-
-function isErrorCorrectionLevel(value: unknown): value is ErrorCorrectionLevel {
-  return typeof value === 'string' && ['L', 'M', 'Q', 'H'].includes(value);
-}
-
-
-const QR = {
-  draw,
-  toString,
-  toImage,
-  toSvg,
-  isErrorCorrectionLevel,
-};
-
-export default QR;
+export default QRCode;

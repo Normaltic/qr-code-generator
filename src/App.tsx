@@ -12,7 +12,7 @@ import Button from '@/components/inputs/Button';
 const QRCODE_PREVIEW_SIZE = 300;
 
 function App() {
-  const [option] = useQROptionsBySearch({
+  const [qr] = useQROptionsBySearch({
     backgroundColor: '#FFFFFF',
     contentColor: '#000000',
     errorCorrectionLevel: 'L',
@@ -24,10 +24,10 @@ function App() {
 
   useEffect(() => {
     (async () => {
-      const str = await QR.toString({ ...option, width: QRCODE_PREVIEW_SIZE, extension: 'svg' });
+      const str = await QR.toString({ ...qr, width: QRCODE_PREVIEW_SIZE, extension: 'svg' });
       if (previewRef.current) previewRef.current.innerHTML = str;
     })()
-  }, [option]);
+  }, [qr]);
 
   return (
     <Wrapper>
