@@ -6,7 +6,6 @@ import styled from "@emotion/styled";
 import useBoolean from "@/hooks/useBoolean";
 
 import { ReactComponent as ArrowUp } from "@/assets/arrow-up.svg";
-import { css } from "@emotion/react";
 
 export interface DropdownOption {
   label: string;
@@ -54,18 +53,13 @@ const Dropdown = ({
       active={isOpen}
       onClick={toggleOpen}
     >
-      <div css={itemStyle}>{currentLabel}</div>
+      <Item>{currentLabel}</Item>
       <ArrowArea up={isOpen}>
         <ArrowUp />
       </ArrowArea>
-      <Options expand={isOpen}>
+      <Options expand={isOpen} selected={selected}>
         {options.map(({ label, value }) => (
-          <Item
-            data-value={value}
-            selected={selected === value}
-            key={value}
-            onClick={handleSelect}
-          >
+          <Item data-value={value} key={value} onClick={handleSelect}>
             {label}
           </Item>
         ))}
@@ -90,14 +84,6 @@ const ArrowArea = styled.div<{ up: boolean }>`
   }
 `;
 
-const itemStyle = css`
-  flex: 1;
-  display: flex;
-  height: 3rem;
-  align-items: center;
-  padding: 0 1rem;
-`;
-
 const Item = styled.div<{ selected?: boolean }>`
   flex: 1;
   display: flex;
@@ -106,8 +92,6 @@ const Item = styled.div<{ selected?: boolean }>`
   padding: 0 1rem;
 
   transition: background-color 0.2s linear;
-
-  ${({ selected }) => selected && "background-color: #EFE5FD"}
 
   &:hover {
     background-color: #d5bff9;
@@ -118,7 +102,7 @@ const Item = styled.div<{ selected?: boolean }>`
   }
 `;
 
-const Options = styled.div<{ expand: boolean }>`
+const Options = styled.div<{ expand: boolean; selected: string }>`
   position: absolute;
   z-index: 1;
   top: calc(100% - 2px);
@@ -131,6 +115,10 @@ const Options = styled.div<{ expand: boolean }>`
   border: 2px solid #6200ee;
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
+
+  & > ${Item}[data-value="${({ selected }) => selected}"] {
+    background-color: #efe5fd;
+  }
 `;
 
 const Wrapper = styled.div<{ active: boolean }>`

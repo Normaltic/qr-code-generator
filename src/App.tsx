@@ -35,14 +35,14 @@ function App() {
 
   return (
     <Wrapper>
-      <StyledSection>
+      <Section>
         <OptionForm />
-      </StyledSection>
-      <StyledSection>
+      </Section>
+      <Section>
         <QRPreviewArea ref={previewRef} />
         <Button>Download PNG</Button>
         <Button>Download SVG</Button>
-      </StyledSection>
+      </Section>
     </Wrapper>
   );
 }
@@ -55,17 +55,17 @@ const Wrapper = styled.div`
   max-width: 1100px;
   margin: auto;
   padding: 2rem;
-`;
 
-const StyledSection = styled(Section)`
-  &:first-child {
-    flex: 1;
-  }
-  &:last-child {
-    flex: 0;
+  & > ${Section} {
+    &:first-child {
+      flex: 1;
+    }
+    &:last-child {
+      flex: 0;
 
-    & > button {
-      margin: 0.25rem 0;
+      & > button {
+        margin: 0.25rem 0;
+      }
     }
   }
 `;
