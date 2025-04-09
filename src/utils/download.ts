@@ -6,5 +6,5 @@ export function download(file: File) {
   element.setAttribute("download", file.name);
   element.click();
 
-  document.body.removeChild(element);
+  window.URL.revokeObjectURL(url);
 }
