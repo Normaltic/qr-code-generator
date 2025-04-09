@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { Global } from '@emotion/react';
 
 import App from './App';
-import resetStyle from './components/ResetStyle';
+import resetStyle from '@/components/etc/ResetStyle';
 
 import reportWebVitals from './reportWebVitals';
 

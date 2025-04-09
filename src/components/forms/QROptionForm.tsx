@@ -3,18 +3,18 @@
 import React, { FormEvent, useCallback, useMemo, useState } from "react";
 import styled from "@emotion/styled";
 
-import { ErrorCorrectionLevel } from "../utils/qr";
+import { ErrorCorrectionLevel } from "@/utils/qr";
 
-import useQROptionsBySearch from '../hooks/useQROptionsBySearch';
-import useHexCode from "../hooks/useHexCode";
-import useNumber from "../hooks/useNumber";
-import useURI from "../hooks/useURI";
+import useQROptionsBySearch from '@/hooks/useQROptionsBySearch';
+import useHexCode from "@/hooks/useHexCode";
+import useNumber from "@/hooks/useNumber";
+import useURI from "@/hooks/useURI";
 
-import Button from "../components/Button";
-import Dropdown from "../components/Dropdown";
-import Heading3 from "../components/Heading3";
-import Input from "../components/Input";
-import ColorInput from "../components/ColorPicker";
+import Button from "@/components/inputs/Button";
+import Dropdown from "@/components/inputs/Dropdown";
+import Heading3 from "@/components/commons/Heading3";
+import Input from "@/components/inputs/Input";
+import ColorInput from "@/components/inputs/ColorPicker";
 
 const DROPDOWN_OPTIONS = [
   { label: 'Low( ~7% )', value: 'L' },

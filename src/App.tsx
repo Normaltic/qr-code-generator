@@ -1,13 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 import styled from '@emotion/styled';
 
-import QR from './utils/qr';
+import QR from '@/utils/qr';
 
-import useQROptionsBySearch from './hooks/useQROptionsBySearch';
+import useQROptionsBySearch from '@/hooks/useQROptionsBySearch';
 
-import Section from './components/Section';
-import OptionForm from './components/QROptionForm';
-import Button from './components/Button';
+import Section from '@/components/commons/Section';
+import OptionForm from '@/components/forms/QROptionForm';
+import Button from '@/components/inputs/Button';
 
 const QRCODE_PREVIEW_SIZE = 300;
 

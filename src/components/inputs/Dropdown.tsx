@@ -3,9 +3,9 @@
 import { MouseEvent, useCallback, useMemo } from "react";
 import styled from "@emotion/styled";
 
-import useBoolean from "../hooks/useBoolean";
+import useBoolean from "@/hooks/useBoolean";
 
-import { ReactComponent as ArrowUp } from "../assets/arrow-up.svg";
+import { ReactComponent as ArrowUp } from "@/assets/arrow-up.svg";
 import { css } from "@emotion/react";
 
 export interface DropdownOption {

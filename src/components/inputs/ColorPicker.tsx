@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef } from "react";
 import styled from "@emotion/styled";
-import useBoolean from "../hooks/useBoolean";
+import useBoolean from "@/hooks/useBoolean";
 import Input from "./Input";
 
 type Hex = `#${string}${string}${string}${string}${string}${string}`;
