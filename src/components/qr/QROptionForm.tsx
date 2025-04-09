@@ -75,57 +75,57 @@ const OptionForm = ({ className, options, onSubmit }: OptionFormProps) => {
   );
 
   return (
-    <form className={className} onSubmit={handleSubmit}>
-      <StyledHeading3>URL</StyledHeading3>
+    <Form className={className} onSubmit={handleSubmit}>
+      <Heading3>URL</Heading3>
       <Input
         value={uri}
         onChange={setUri}
         valid={isValidUri}
         placeholder={`URI without 'https://'`}
       />
-      <StyledHeading3>Content color</StyledHeading3>
+      <Heading3>Content color</Heading3>
       <ColorInput
         value={contentColor}
         onChange={setContentColor}
         valid={isValidContentColor}
         placeholder="#000000"
       />
-      <StyledHeading3>Background color</StyledHeading3>
+      <Heading3>Background color</Heading3>
       <ColorInput
         value={backgroundColor}
         onChange={setBackgroundColor}
         placeholder="#FFFFFF"
       />
-      <StyledHeading3>Error correction level</StyledHeading3>
+      <Heading3>Error correction level</Heading3>
       <Dropdown
         selected={errorLevel}
         options={DROPDOWN_OPTIONS}
         onSelect={(args) => setErrorLevel(args as ErrorCorrectionLevel)}
       />
-      <StyledHeading3>Width</StyledHeading3>
+      <Heading3>Width</Heading3>
       <Input
         value={width}
         onChange={setWidth}
         valid={isValidWidth}
         placeholder={`Value is larger than '37'`}
       />
-      <Button
-        type="submit"
-        disabled={isCanSubmit === false}
-        css={{
-          marginTop: "2rem"
-        }}
-      >
+      <Button type="submit" disabled={isCanSubmit === false}>
         Generate QR code
       </Button>
-    </form>
+    </Form>
   );
 };
 
-const StyledHeading3 = styled(Heading3)`
-  margin-bottom: 0.5rem;
+const Form = styled.form`
+  ${Heading3} {
+    margin-bottom: 0.5rem;
 
-  &:nth-child(2n + 3) {
+    &:nth-child(2n + 3) {
+      margin-top: 2rem;
+    }
+  }
+
+  ${Button}:last-child {
     margin-top: 2rem;
   }
 `;
