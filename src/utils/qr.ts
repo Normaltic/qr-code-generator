@@ -103,13 +103,22 @@ class QRCode implements QRCodeOptions {
   static async toImage({ extension, ...options }: QRCodeImageOptions) {
     const dataUrl = await QRCode.toString({ ...options, extension });
 
-    const blob = new Blob([dataUrl], { type: `image/${extension}` });
+    const base64 = dataUrl.replace(/^data:image\/\w+;base64,/, "");
+
+    const binary = window.atob(base64);
+    const array = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+      array[i] = binary.charCodeAt(i);
+    }
+
+    const blob = new Blob([array], { type: `image/${extension}` });
 
     return blob;
   }
 
   static async toSVG(options: QRCodeOptions) {
     const result = await QRCode.toString({ ...options, extension: "svg" });
+    console.log(result);
 
     const svgBlob = new Blob([result], { type: "image/svg+xml;charset=utf-8" });
 

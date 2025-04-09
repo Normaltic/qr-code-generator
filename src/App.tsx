@@ -1,15 +1,11 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import styled from "@emotion/styled";
-
-import QR from "@/utils/qr";
 
 import useQROptionsBySearch from "@/hooks/useQROptionsBySearch";
 
 import Section from "@/components/commons/Section";
-import OptionForm from "@/components/forms/QROptionForm";
-import Button from "@/components/inputs/Button";
-
-const QRCODE_PREVIEW_SIZE = 300;
+import OptionForm from "@/components/qr/QROptionForm";
+import QRResultPanel from "./components/qr/QRResultPanel";
 
 function App() {
   const [qr, update] = useQROptionsBySearch({
@@ -20,28 +16,13 @@ function App() {
     link: "https://qr-code.yunji.kim"
   });
 
-  const previewRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    (async () => {
-      const str = await QR.toString({
-        ...qr,
-        width: QRCODE_PREVIEW_SIZE,
-        extension: "svg"
-      });
-      if (previewRef.current) previewRef.current.innerHTML = str;
-    })();
-  }, [qr]);
-
   return (
     <Wrapper>
       <Section>
         <OptionForm options={qr} onSubmit={update} />
       </Section>
       <Section>
-        <div ref={previewRef} />
-        <Button>Download PNG</Button>
-        <Button>Download SVG</Button>
+        <QRResultPanel qr={qr} />
       </Section>
     </Wrapper>
   );
@@ -62,10 +43,6 @@ const Wrapper = styled.div`
     }
     &:last-child {
       flex: 0;
-
-      & > button {
-        margin: 0.25rem 0;
-      }
     }
   }
 `;
