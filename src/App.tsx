@@ -12,7 +12,7 @@ import Button from "@/components/inputs/Button";
 const QRCODE_PREVIEW_SIZE = 300;
 
 function App() {
-  const [qr] = useQROptionsBySearch({
+  const [qr, update] = useQROptionsBySearch({
     backgroundColor: "#FFFFFF",
     contentColor: "#000000",
     errorCorrectionLevel: "L",
@@ -36,10 +36,10 @@ function App() {
   return (
     <Wrapper>
       <Section>
-        <OptionForm />
+        <OptionForm options={qr} onSubmit={update} />
       </Section>
       <Section>
-        <QRPreviewArea ref={previewRef} />
+        <div ref={previewRef} />
         <Button>Download PNG</Button>
         <Button>Download SVG</Button>
       </Section>
@@ -68,9 +68,4 @@ const Wrapper = styled.div`
       }
     }
   }
-`;
-
-const QRPreviewArea = styled.div`
-  width: ${QRCODE_PREVIEW_SIZE}px;
-  height: ${QRCODE_PREVIEW_SIZE}px;
 `;

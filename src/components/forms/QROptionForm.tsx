@@ -1,11 +1,8 @@
-/** @jsxImportSource @emotion/react */
-
-import React, { FormEvent, useCallback, useMemo, useState } from "react";
+import { FormEvent, useCallback, useMemo, useState } from "react";
 import styled from "@emotion/styled";
 
-import { ErrorCorrectionLevel } from "@/utils/qr";
+import { ErrorCorrectionLevel, QRCodeOptions } from "@/utils/qr";
 
-import useQROptionsBySearch from "@/hooks/useQROptionsBySearch";
 import useHexCode from "@/hooks/useHexCode";
 import useNumber from "@/hooks/useNumber";
 import useURI from "@/hooks/useURI";
@@ -25,17 +22,11 @@ const DROPDOWN_OPTIONS = [
 
 export interface OptionFormProps {
   className?: string;
+  options: QRCodeOptions;
+  onSubmit: (options: QRCodeOptions) => void;
 }
 
-const OptionForm = ({ className }: OptionFormProps) => {
-  const [options, update] = useQROptionsBySearch({
-    backgroundColor: "#FFFFFF",
-    contentColor: "#000000",
-    errorCorrectionLevel: "L",
-    width: 100,
-    link: "https://qr-code.yunji.kim"
-  });
-
+const OptionForm = ({ className, options, onSubmit }: OptionFormProps) => {
   const [uri, setUri, isValidUri] = useURI(options.link);
 
   const [contentColor, setContentColor, isValidContentColor] = useHexCode(
@@ -47,7 +38,9 @@ const OptionForm = ({ className }: OptionFormProps) => {
 
   const [errorLevel, setErrorLevel] = useState(options.errorCorrectionLevel);
 
-  const [width, setWidth, isValidWidth] = useNumber(options.width, { min: 37 });
+  const [width, setWidth, isValidWidth] = useNumber(options.width, {
+    min: 37
+  });
 
   const isCanSubmit = useMemo(() => {
     return (
@@ -62,15 +55,23 @@ const OptionForm = ({ className }: OptionFormProps) => {
     (e: FormEvent) => {
       e.preventDefault();
       if (!isCanSubmit) return;
-      update({
+      onSubmit({
         link: uri,
         contentColor,
         backgroundColor,
         errorCorrectionLevel: errorLevel,
-        width
+        width: +width
       });
     },
-    [isCanSubmit, uri, contentColor, backgroundColor, errorLevel, width, update]
+    [
+      isCanSubmit,
+      uri,
+      contentColor,
+      backgroundColor,
+      errorLevel,
+      width,
+      onSubmit
+    ]
   );
 
   return (
