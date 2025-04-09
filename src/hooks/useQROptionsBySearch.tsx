@@ -1,24 +1,24 @@
 import { useCallback, useMemo, useRef } from "react";
-import { useLocation, useNavigate } from 'react-router';
+import { useLocation, useNavigate } from "react-router";
 
 import QR, { QRCodeOptions } from "@/utils/qr";
 import validator from "@/utils/validator";
 
 const KEYS = {
-  BACKGROUND_COLOR: 'bgc',
-  CONTENT_COLOR: 'ctc',
-  ERROR_CORRECTION_LEVEL: 'ecl',
-  WIDTH: 'wid',
-  LINK: 'lnk',
+  BACKGROUND_COLOR: "bgc",
+  CONTENT_COLOR: "ctc",
+  ERROR_CORRECTION_LEVEL: "ecl",
+  WIDTH: "wid",
+  LINK: "lnk"
 } as const;
 
 type SearchOptions = {
-  [KEYS.BACKGROUND_COLOR]: QRCodeOptions['backgroundColor'],
-  [KEYS.CONTENT_COLOR]: QRCodeOptions['contentColor'],
-  [KEYS.ERROR_CORRECTION_LEVEL]: QRCodeOptions['errorCorrectionLevel'],
-  [KEYS.WIDTH]: QRCodeOptions['width'],
-  [KEYS.LINK]: QRCodeOptions['link'],
-}
+  [KEYS.BACKGROUND_COLOR]: QRCodeOptions["backgroundColor"];
+  [KEYS.CONTENT_COLOR]: QRCodeOptions["contentColor"];
+  [KEYS.ERROR_CORRECTION_LEVEL]: QRCodeOptions["errorCorrectionLevel"];
+  [KEYS.WIDTH]: QRCodeOptions["width"];
+  [KEYS.LINK]: QRCodeOptions["link"];
+};
 
 function useQROptionsBySearch(defaultOprion: QRCodeOptions) {
   const optRef = useRef(defaultOprion);
@@ -37,40 +37,69 @@ function useQROptionsBySearch(defaultOprion: QRCodeOptions) {
     const link = searchParams.get(KEYS.LINK);
 
     const instance = new QR({
-      backgroundColor: bgColor && validator.isHEX(bgColor) ? bgColor : optRef.current.backgroundColor,
-      contentColor: ctColor && validator.isHEX(ctColor) ? ctColor : optRef.current.contentColor,
-      errorCorrectionLevel: ecLevel && QR.isErrorCorrectionLevel(ecLevel) ? ecLevel : optRef.current.errorCorrectionLevel,
-      width: width && Number.isSafeInteger(+width) ? +width : optRef.current.width,
-      link: link && validator.isURI(link) ? link : optRef.current.link,
-    })
+      backgroundColor:
+        bgColor && validator.isHEX(bgColor)
+          ? bgColor
+          : optRef.current.backgroundColor,
+      contentColor:
+        ctColor && validator.isHEX(ctColor)
+          ? ctColor
+          : optRef.current.contentColor,
+      errorCorrectionLevel:
+        ecLevel && QR.isErrorCorrectionLevel(ecLevel)
+          ? ecLevel
+          : optRef.current.errorCorrectionLevel,
+      width:
+        width && Number.isSafeInteger(+width) ? +width : optRef.current.width,
+      link: link && validator.isURI(link) ? link : optRef.current.link
+    });
 
     return instance;
   }, [location.search]);
 
-  const update = useCallback((args: Record<keyof QRCodeOptions, number | string>) => {
-    const {
-      backgroundColor,
-      contentColor,
-      errorCorrectionLevel,
-      width,
-      link,
-    } = args;
+  const update = useCallback(
+    (args: Record<keyof QRCodeOptions, number | string>) => {
+      const {
+        backgroundColor,
+        contentColor,
+        errorCorrectionLevel,
+        width,
+        link
+      } = args;
 
-    const parsed: SearchOptions = {
-      [KEYS.BACKGROUND_COLOR]: typeof backgroundColor === 'string' && validator.isHEX(backgroundColor) ? backgroundColor : optRef.current.backgroundColor,
-      [KEYS.CONTENT_COLOR]: typeof contentColor === 'string' && validator.isHEX(contentColor) ? contentColor : optRef.current.contentColor,
-      [KEYS.ERROR_CORRECTION_LEVEL]: QR.isErrorCorrectionLevel(errorCorrectionLevel) ? errorCorrectionLevel : optRef.current.errorCorrectionLevel,
-      [KEYS.WIDTH]: Number.isSafeInteger(+width) ? +width : optRef.current.width,
-      [KEYS.LINK]: typeof link === 'string' && validator.isURI(link) ? link : optRef.current.link
-    };
+      const parsed: SearchOptions = {
+        [KEYS.BACKGROUND_COLOR]:
+          typeof backgroundColor === "string" &&
+          validator.isHEX(backgroundColor)
+            ? backgroundColor
+            : optRef.current.backgroundColor,
+        [KEYS.CONTENT_COLOR]:
+          typeof contentColor === "string" && validator.isHEX(contentColor)
+            ? contentColor
+            : optRef.current.contentColor,
+        [KEYS.ERROR_CORRECTION_LEVEL]: QR.isErrorCorrectionLevel(
+          errorCorrectionLevel
+        )
+          ? errorCorrectionLevel
+          : optRef.current.errorCorrectionLevel,
+        [KEYS.WIDTH]: Number.isSafeInteger(+width)
+          ? +width
+          : optRef.current.width,
+        [KEYS.LINK]:
+          typeof link === "string" && validator.isURI(link)
+            ? link
+            : optRef.current.link
+      };
 
-    const searchParams = new URLSearchParams({
-      ...parsed,
-      [KEYS.WIDTH]: `${parsed[KEYS.WIDTH]}`
-    });
+      const searchParams = new URLSearchParams({
+        ...parsed,
+        [KEYS.WIDTH]: `${parsed[KEYS.WIDTH]}`
+      });
 
-    navigate({ search: searchParams.toString() });
-  }, [navigate]);
+      navigate({ search: searchParams.toString() });
+    },
+    [navigate]
+  );
 
   return [qr, update] as const;
 }

@@ -7,30 +7,30 @@ type PreProcessor = (value: string) => string;
 type Conditioner = (value: string) => boolean;
 
 export interface UseInputOptions {
-  validator?: Validator,
-  preProcessor?: PreProcessor,
-  conditioner?: Conditioner,
+  validator?: Validator;
+  preProcessor?: PreProcessor;
+  conditioner?: Conditioner;
 }
 
 const DEFAULT_VALIDATOR: Validator = () => true;
 
-const DEFAULT_PREPROCESSOR: PreProcessor = value => value;
+const DEFAULT_PREPROCESSOR: PreProcessor = (value) => value;
 
-const DEFAULT_CONDITIONER: Conditioner = value => true;
+const DEFAULT_CONDITIONER: Conditioner = (value) => true;
 
 const DEFAULT_OPTIONS: UseInputOptions = {
   validator: DEFAULT_VALIDATOR,
   preProcessor: DEFAULT_PREPROCESSOR,
-  conditioner: DEFAULT_CONDITIONER,
+  conditioner: DEFAULT_CONDITIONER
 };
 
-function useInput(initialValue = '', options = DEFAULT_OPTIONS) {
+function useInput(initialValue = "", options = DEFAULT_OPTIONS) {
   const [value, setValue] = useState(initialValue);
 
   const val = useRef(options?.validator ?? DEFAULT_VALIDATOR);
   const pre = useRef(options?.preProcessor ?? DEFAULT_PREPROCESSOR);
   const con = useRef(options?.conditioner ?? DEFAULT_CONDITIONER);
-  const isValid = useRef(val.current(initialValue))
+  const isValid = useRef(val.current(initialValue));
 
   val.current = options?.validator ?? DEFAULT_VALIDATOR;
   pre.current = options?.preProcessor ?? DEFAULT_PREPROCESSOR;
@@ -38,10 +38,10 @@ function useInput(initialValue = '', options = DEFAULT_OPTIONS) {
   isValid.current = val.current(value);
 
   const change = useCallback((e: string | ChangeEvent<HTMLInputElement>) => {
-    const next = typeof e === 'string' ? e : e.target.value;
+    const next = typeof e === "string" ? e : e.target.value;
     const proceed = pre.current(next);
     if (!con.current(proceed)) return;
-    setValue(proceed)
+    setValue(proceed);
   }, []);
 
   return [value, change, isValid.current] as const;
